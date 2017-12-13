@@ -163,24 +163,40 @@ def op(opcode):
         addr += 3
     
     def _not():
-        print('ERROR: not not implemented')
-        sys.exit()
+        global addr
+        a = mem[addr + 1]
+        b = mem_val(addr + 2)
+        mask = (1<<15) - 1
+        r = b ^ mask
+        reg[num_to_reg(a)] = r
+        addr += 2
     
     def _rmem():
-        print('ERROR: rmem not implemented')
-        sys.exit()
+        global addr
+        a = mem[addr + 1]
+        b = mem_val(addr + 2)
+        reg[num_to_reg(a)] = mem[b]
+        addr += 2
     
     def _wmem():
-        print('ERROR: wmem not implemented')
-        sys.exit()
+        global addr
+        a = mem_val(addr + 1)
+        b = mem_val(addr + 2)
+        mem[a] = b
+        addr += 2
     
     def _call():
-        print('ERROR: call not implemented')
-        sys.exit()
+        global addr
+        stack.append(addr + 2)
+        a = mem_val(addr + 1)
+        addr = a - 1
     
     def _ret():
-        print('ERROR: ret not implemented')
-        sys.exit()
+        global addr
+        try:
+            addr = stack.pop() - 1
+        except IndexError:
+            _halt()
     
     def _out():
         global addr
@@ -223,7 +239,5 @@ def op(opcode):
 # execute each instruction in memory
 while True:
     opcode = mem[addr]
-    if addr == 644:
-        print(opcode)
     op(opcode)
     addr += 1
