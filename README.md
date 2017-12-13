@@ -1,3 +1,1 @@
-# Synacor Challenge
-
-TODO: work on this challenge
+# [Synacor Challenge](https://challenge.synacor.com/)
