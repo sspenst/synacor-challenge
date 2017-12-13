@@ -3,73 +3,158 @@ Synacor Challenge
 """
 import sys
 
+# read and store the binary as 16-bit values in the mem array
+bin_raw = open('challenge.bin', 'r', encoding='latin1').read()
+
+# 15-bit address space
+num_inst = int(len(bin_raw)/2)
+mem = [0] * num_inst
+
+# convert each little-endian pair to a 16-bit value
+for i in range(num_inst):
+    low = ord(bin_raw[i*2])
+    high = ord(bin_raw[i*2 + 1])
+    mem[i] = (high << 8) + low
+
+# eight registers
+reg = [0] * 8
+
+# current address
 addr = 0
+
+def num_to_reg(num):
+    """
+    Convert a value to a register index.
+    Fails if the value is not a valid register index.
+    """
+    reg_id = num - 32768
+    assert reg_id >= 0 and reg_id < 8
+    return reg_id
+
+def mem_val(addr):
+    """
+    Get the value of memory address 'addr'. If the value
+    corresponds to a register, the register's value is returned.
+    """
+    val = mem[addr]
+    if val >= 0 and val < 32768:
+        return val
+    else:
+        return reg[num_to_reg(val)]
 
 def op(opcode):
     def _halt():
+        print('HALT at addr ' + str(addr))
         sys.exit()
+
     def _set():
-        print('ERROR: set not implemented')
-        sys.exit()
+        global addr
+        a = mem[addr + 1]
+        b = mem_val(addr + 2)
+        reg[num_to_reg(a)] = b
+        addr += 2
+    
     def _push():
         print('ERROR: push not implemented')
         sys.exit()
+    
     def _pop():
         print('ERROR: pop not implemented')
         sys.exit()
+    
     def _eq():
-        print('ERROR: eq not implemented')
-        sys.exit()
+        global addr
+        a = mem[addr + 1]
+        b = mem_val(addr + 2)
+        c = mem_val(addr + 3)
+        if b == c:
+            reg[num_to_reg(a)] = 1
+        else:
+            reg[num_to_reg(a)] = 0
+        addr += 3
+    
     def _gt():
         print('ERROR: gt not implemented')
         sys.exit()
+    
     def _jmp():
         global addr
-        jmp_addr = mem[addr + 1]
-        addr = jmp_addr - 1
+        a = mem_val(addr + 1)
+        addr = a - 1
+    
     def _jt():
-        print('ERROR: jt not implemented')
-        sys.exit()
+        global addr
+        a = mem_val(addr + 1)
+        b = mem_val(addr + 2)
+        if a != 0:
+            addr = b - 1
+        else:
+            addr += 2
+    
     def _jf():
-        print('ERROR: jf not implemented')
-        sys.exit()
+        global addr
+        a = mem_val(addr + 1)
+        b = mem_val(addr + 2)
+        if a == 0:
+            addr = b - 1
+        else:
+            addr += 2
+    
     def _add():
-        print('ERROR: add not implemented')
-        sys.exit()
+        global addr
+        a = mem[addr + 1]
+        b = mem_val(addr + 2)
+        c = mem_val(addr + 3)
+        r = (b + c) % 32768
+        reg[num_to_reg(a)] = r
+        addr += 3
+    
     def _mult():
         print('ERROR: mult not implemented')
         sys.exit()
+    
     def _mod():
         print('ERROR: mod not implemented')
         sys.exit()
+    
     def _and():
         print('ERROR: and not implemented')
         sys.exit()
+    
     def _or():
         print('ERROR: or not implemented')
         sys.exit()
+    
     def _not():
         print('ERROR: not not implemented')
         sys.exit()
+    
     def _rmem():
         print('ERROR: rmem not implemented')
         sys.exit()
+    
     def _wmem():
         print('ERROR: wmem not implemented')
         sys.exit()
+    
     def _call():
         print('ERROR: call not implemented')
         sys.exit()
+    
     def _ret():
         print('ERROR: ret not implemented')
         sys.exit()
+    
     def _out():
         global addr
+        a = mem_val(addr + 1)
+        print(chr(a), end='')
         addr += 1
-        print(chr(mem[addr]), end='')
+    
     def _in():
         print('ERROR: in not implemented')
         sys.exit()
+    
     def _nop():
         pass
 
@@ -98,24 +183,8 @@ def op(opcode):
         21: _nop
     }[opcode]()
 
-# read and store the binary as 16-bit values in the mem array
-bin_raw = open('challenge.bin', 'r', encoding='latin1').read()
-
-# 15-bit address space
-num_inst = int(len(bin_raw)/2)
-mem = [0] * num_inst
-
-# convert each little-endian pair to a 16-bit value
-for i in range(num_inst):
-    low = ord(bin_raw[i*2])
-    high = ord(bin_raw[i*2 + 1])
-    mem[i] = (high << 8) + low
-
-# execute the binary
+# execute each instruction in memory
 while True:
     opcode = mem[addr]
-    #print(code, end='')
     op(opcode)
     addr += 1
-
-# TODO: the code currently breaks on a jump (opcode=6) instruction
