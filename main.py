@@ -1,6 +1,7 @@
 """
 Synacor Challenge
 """
+import codes
 import sys
 
 # read and store the binary as 16-bit values in the mem array
@@ -21,6 +22,10 @@ reg = [0] * 8
 
 # start with an empty stack
 stack = []
+
+# user input stack
+#stdin = []
+stdin = codes.code_to_stdin(6)
 
 # current address
 addr = 0
@@ -205,8 +210,18 @@ def op(opcode):
         addr += 1
     
     def _in():
-        print('ERROR: in not implemented')
-        sys.exit()
+        global addr
+        a = mem[addr + 1]
+
+        # get user input if there is none pending
+        if not stdin:
+            in_str = input()
+            stdin.append(ord('\n'))
+            for c in in_str[::-1]:
+                stdin.append(ord(c))
+
+        reg[num_to_reg(a)] = stdin.pop()
+        addr += 1
     
     def _nop():
         pass
