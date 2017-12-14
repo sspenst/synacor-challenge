@@ -1,7 +1,6 @@
 """
 Script for figuring out coin order for the Ruins puzzle.
 """
-
 import itertools
 import sys
 

@@ -1,3 +1,6 @@
+"""
+Contains sequences of inputs required to find codes in the adventure game.
+"""
 code = {
     4: ["take tablet",
     "use tablet"],
