@@ -1,5 +1,13 @@
 """
 Contains sequences of inputs required to find codes in the adventure game.
+# 1: found in the arch-spec hints
+# 2: found by implementing out and noop
+# 3: found by implementing all instructions
+# 4: found by inputting the commands in '4' (by using the tablet)
+# 5: found by inputting the commands in '5' (by getting the twisty passages)
+# 6: found by inputting the commands in '6' (by teleporting to the safe location)
+# 7: ?
+# 8: ?
 """
 code = {
     4: ["take tablet",
@@ -19,22 +27,7 @@ code = {
     "go west",
     "go south",
     "go north"],
-    6: ["go doorway",
-    "go north",
-    "go north",
-    "go bridge",
-    "go continue",
-    "go down",
-    "go east",
-    "take empty lantern",
-    "go west",
-    "go west",
-    "go passage",
-    "go ladder",
-    "go west",
-    "go south",
-    "go north",
-    "take can",
+    6: ["take can",
     "use can",
     "go west",
     "go ladder",
@@ -67,34 +60,24 @@ code = {
     "use corroded coin",
     "go north",
     "take teleporter",
+    "set teleporter",
     "use teleporter"],
-    7: ["go doorway",
-    "go north",
-    "go north",
-    "go bridge",
-    "go continue",
-    "go down",
-    "go east",
-    "take empty lantern",
-    "go west",
-    "go west",
-    "go passage",
-    "go ladder",
-    "go west",
-    "go south",
-    "go north",
-    "take can",
-    "use can",
-    "go west",
-    "go ladder",
-    "go darkness",
-    "use lantern",
-    "go continue"],
+    7: [],
     8: []
 }
 
 def code_to_stdin(n):
-    cmds = '\n'.join(code[n])
+    """
+    Combines strings to create a sequence of user-inputs to the binary.
+    """
+    codes = []
+    for i in range(4,n+1):
+        # skip empty lists
+        if len(code[i]) == 0:
+            continue
+        codes.append('\n'.join(code[i]))
+    cmds = '\n'.join(codes)
+
     stdin = []
     stdin.append(ord('\n'))
     for c in cmds[::-1]:

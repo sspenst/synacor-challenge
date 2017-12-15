@@ -24,10 +24,10 @@ def write_inst(f):
     global out
 
     opcode = op.mem[addr]
-    addr += 1
 
     # not every memory address contains an instruction
     if opcode > 21:
+        addr += 1
         return
 
     name = op.OP[opcode]['name']
@@ -42,6 +42,8 @@ def write_inst(f):
     # if we are printing chars
     if opcode == 19:
         out = True
+
+    addr += 1
 
     for i in range(op.OP[opcode]['args']):
         if out == True:

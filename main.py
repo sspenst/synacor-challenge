@@ -1,5 +1,5 @@
 """
-Interprets and runs the binary.
+Runs the binary.
 """
 import op
 

@@ -1,5 +1,12 @@
+"""
+Contains useful functions for interpreting and executing the binary.
+"""
 import codes
 import sys
+
+# the code (4-8) that you would like to reach automatically
+# set code to 0 to run the binary normally
+code = 8
 
 # global memory
 mem = None
@@ -11,8 +18,11 @@ reg = [0] * 8
 stack = []
 
 # user input stack
-#stdin = []
-stdin = codes.code_to_stdin(6)
+stdin = []
+if code >= 9:
+    sys.exit('Value of code was ' + str(code) + ' but should be between 4 and 7.')
+elif code >= 4:
+    stdin = codes.code_to_stdin(code)
 
 # current address
 addr = 0
@@ -44,6 +54,21 @@ def exec_inst():
     opcode = mem[addr]
     OP[opcode]['func']()
     addr += 1
+
+def set_teleporter():
+    """
+    Modify the teleporter (function call to address 6027) to return 6.
+    """
+
+    if code >= 7:
+        reg[7] = 25734
+
+    mem[6027] = 1
+    mem[6028] = 32768
+    mem[6029] = 6
+    mem[6030] = 18
+
+    print('Teleporter energy level set.')
 
 def num_to_reg(num):
     """
@@ -231,8 +256,16 @@ def _in():
     if not stdin:
         in_str = input()
         stdin.append(ord('\n'))
+
+        if in_str == 'set teleporter':
+            set_teleporter()
+
         for c in in_str[::-1]:
             stdin.append(ord(c))
+
+    # check to see if the command 'set teleporter' has been automatically inputted
+    if ''.join([chr(c) for c in stdin[-14:][::-1]]) == 'set teleporter':
+        set_teleporter()
 
     reg[num_to_reg(a)] = stdin.pop()
     addr += 1
