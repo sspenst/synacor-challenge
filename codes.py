@@ -1,13 +1,13 @@
 """
 Contains sequences of inputs required to find codes in the adventure game.
-# 1: found in the arch-spec hints
+# 1: found by reading the arch-spec hints
 # 2: found by implementing out and noop
 # 3: found by implementing all instructions
 # 4: found by inputting the commands in '4' (by using the tablet)
 # 5: found by inputting the commands in '5' (by getting the twisty passages)
 # 6: found by inputting the commands in '6' (by teleporting to the safe location)
-# 7: ?
-# 8: ?
+# 7: found by solving the teleporter puzzle
+# 8: found by solving the orb puzzle
 """
 code = {
     4: ["take tablet",
@@ -63,7 +63,31 @@ code = {
     "set teleporter",
     "use teleporter"],
     7: [],
-    8: []
+    8: ["go north",
+    "go north",
+    "go north",
+    "go north",
+    "go north",
+    "go north",
+    "go north",
+    "go north",
+    "go north",
+    "take orb",
+    "go north",
+    "go east",
+    "go east",
+    "go north",
+    "go west",
+    "go south",
+    "go east",
+    "go east",
+    "go west",
+    "go north",
+    "go north",
+    "go east",
+    "go vault",
+    "take mirror",
+    "use mirror"]
 }
 
 def code_to_stdin(n):

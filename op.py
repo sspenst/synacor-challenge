@@ -259,6 +259,8 @@ def _in():
 
         if in_str == 'set teleporter':
             set_teleporter()
+        elif in_str == 'exit':
+            sys.exit()
 
         for c in in_str[::-1]:
             stdin.append(ord(c))
