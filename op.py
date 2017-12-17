@@ -6,7 +6,7 @@ import sys
 
 # the code (4-8) that you would like to reach automatically
 # set code to 0 to run the binary normally
-code = 8
+code = 0
 
 # global memory
 mem = None
@@ -34,7 +34,7 @@ def read_binary():
     global mem
 
     # read and store the binary as 16-bit values in the mem array
-    bin_raw = open('challenge.bin', 'rb').read()
+    bin_raw = open('rr.bin', 'rb').read()
 
     # 15-bit address space
     num_inst = int(len(bin_raw)/2)
